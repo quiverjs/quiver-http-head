@@ -1,11 +1,13 @@
 import { Map as ImmutableMap } from 'immutable'
 
-const noUppercaseRegex = /^[^A-Z]*$/
-const validHeaderValueRegex = /^[\x20-\x7E]*$/
+// Follow rules at http://httpwg.github.io/specs/rfc7230.html
 
-// Allowed header name characters except uppercase
-// http://httpwg.github.io/specs/rfc7230.html#rule.token.separators
+const noUppercaseRegex = /^[^A-Z]*$/
+
+// Allow header name characters except uppercase
 const validHeaderNameRegex = /^[a-z0-9\!\#\$\%\&\'\*\+\-\.\^\_\`\|\~]+$/
+
+const validHeaderValueRegex = /^[\x20-\x7E\t]*$/
 
 const validStatusRegex = /^\d{3}$/
 const validSchemeRegex = /^[a-z][a-z0-9\+\-\.]*$/
@@ -15,15 +17,17 @@ const regNameRegex = `[a-zA-Z\\-\\.\\_\\~` +
   `\\!\\$\\&\\'\\(\\)\\*\\+\\,\\;\\=]` +
   `|\\%[0-9a-fA-F][0-9a-fA-F]`
 
-const pcharRegex = regNameRegex + `|[\\:\\@]`
+const pcharRegex = `${regNameRegex}|[\\:\\@]`
+const qcharRegex = `${pcharRegex}|\\?\\/`
+const pathnameRegex = `\\/((${pcharRegex})+(${pcharRegex}|\\/)*)?`
 
-const validPathnameRegex = new RegExp(`^/(${pcharRegex})*$`)
+const validPathnameRegex = new RegExp(`^${pathnameRegex}$`)
 const validSearchRegex = new RegExp(`^\\?(${pcharRegex})*$`)
-const validPathRegex = new RegExp(`^/(${pcharRegex})*\\??(${pcharRegex})*$`)
+const validPathRegex = new RegExp(`^${pathnameRegex}\\??(${qcharRegex})*$`)
 
 const validAuthorityRegex = new RegExp(`^${regNameRegex}+(\\:\\d+)?$/`)
 const validHostnameRegex = new RegExp(`^${regNameRegex}+$/`)
-const validPortRegex = /^\d+$/
+const validPortRegex = /^\d{1,5}$/
 
 const assertRegex = (regex, str, errorMessage) => {
   if (typeof(str) !== 'string')
