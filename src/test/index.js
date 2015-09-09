@@ -5,29 +5,6 @@ import {
   ValidatedResponseHead as ResponseHead
 } from '../lib'
 
-test('response head test', assert => {
-  const res1 = new ResponseHead()
-
-  assert.test('set status', assert => {
-    assert.notOk(res1.status)
-
-    const res2 = res1.setStatus(200)
-    assert.equal(res2.status, '200')
-    assert.notEqual(res2.status, 200)
-    assert.notOk(res1.status)
-
-    assert.throws(() => res1.setStatus(12.34),
-      'should not allow floating point status')
-
-    assert.throws(() => res1.setStatus(1000),
-      'should not allow status > 999')
-
-    assert.end()
-  })
-
-  assert.end()
-})
-
 test('request head test', assert => {
   const req1 = new RequestHead()
 
@@ -150,6 +127,24 @@ test('request head test', assert => {
     const req2 = req1.setArgsKey($foo, bar)
     assert.equal(req2.args.get($foo), bar)
     assert.notOk(req1.args.get($foo))
+
+    assert.end()
+  })
+
+  assert.test('response head test', assert => {
+    const res1 = req1.createResponseHead()
+    assert.notOk(res1.status)
+
+    const res2 = res1.setStatus(200)
+    assert.equal(res2.status, '200')
+    assert.notEqual(res2.status, 200)
+    assert.notOk(res1.status)
+
+    assert.throws(() => res1.setStatus(12.34),
+      'should not allow floating point status')
+
+    assert.throws(() => res1.setStatus(1000),
+      'should not allow status > 999')
 
     assert.end()
   })

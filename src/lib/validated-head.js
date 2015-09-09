@@ -2,6 +2,7 @@ import { Map as ImmutableMap } from 'immutable'
 
 import { RequestHead } from './request'
 import { ResponseHead } from './response'
+import { mixinCreateHeadMethod } from './mixin'
 
 import {
   validateKeyValue,
@@ -116,3 +117,6 @@ export class ValidatedRequestHead extends RequestHead {
     return super.setPort(port)
   }
 }
+
+mixinCreateHeadMethod(RequestHead, ResponseHead)
+mixinCreateHeadMethod(ValidatedRequestHead, ValidatedResponseHead)

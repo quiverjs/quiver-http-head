@@ -153,7 +153,10 @@ export class RequestHead extends HttpHead {
     const queryString = queryStringify(query.toObject())
     const search = '?' + queryString
 
-    return this.setSearch(search)
+    const newRequest = this.setSearch(search)
+
+    newRequest[$cachedQuery] = query
+    return newRequest
   }
 
   setQueryKey(key, value) {
