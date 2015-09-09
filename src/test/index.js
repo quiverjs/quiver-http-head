@@ -69,5 +69,33 @@ test('request head test', assert => {
     assert.end()
   })
 
+  assert.test('request authority', assert => {
+    assert.notOk(req1.authority)
+
+    const req2 = req1.setAuthority('example.com:8080')
+    assert.equal(req2.authority, 'example.com:8080')
+    assert.notOk(req1.authority)
+
+    assert.equal(req2.hostname, 'example.com')
+    assert.equal(req2.port, '8080')
+
+    const req3 = req2.setPort(80)
+    assert.equal(req3.port, '80')
+    assert.notEqual(req3.port, 80)
+    assert.equal(req2.port, '8080')
+    assert.equal(req3.authority, 'example.com:80')
+
+    const req4 = req1.setAuthority('example.org')
+    assert.equal(req4.hostname, 'example.org')
+    assert.notOk(req4.port)
+
+    const req5 = req4.setHostname('other.com')
+    assert.equal(req5.authority, 'other.com')
+    assert.equal(req4.authority, 'example.org')
+    assert.notOk(req5.port)
+
+    assert.end()
+  })
+
   assert.end()
 })

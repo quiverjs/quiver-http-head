@@ -11,16 +11,18 @@ export const $getHeader = Symbol('@getHeader')
 export const $setHeader = Symbol('@setHeader')
 export const $deleteHeader = Symbol('@deleteHeader')
 
-const constructInstance = (source, args) => {
+const constructInstance = (source, opts) => {
   let { constructor } = source
   if(constructor[$species])
     constructor = constructor[$species]
 
-  return new constructor(args)
+  return new constructor(opts)
 }
 
 export class HttpHead {
-  constructor(rawHeaders=new ImmutableMap()) {
+  constructor(opts={}) {
+    const { rawHeaders=new ImmutableMap() } = opts
+
     if(!ImmutableMap.isMap(rawHeaders))
       throw new TypeError('raw header must be an immutable map')
 
@@ -33,7 +35,7 @@ export class HttpHead {
 
   [$setHeader](key, value) {
     const newHeaders = this[$headers].set(key, value)
-    return constructInstance(this, newHeaders)
+    return constructInstance(this, { rawHeaders: newHeaders })
   }
 
   [$deleteHeader](key) {
