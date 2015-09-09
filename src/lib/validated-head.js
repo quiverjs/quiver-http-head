@@ -1,6 +1,6 @@
 import { Map as ImmutableMap } from 'immutable'
 
-import { RequestHead, $createQueryMap } from './request'
+import { RequestHead } from './request'
 import { ResponseHead } from './response'
 
 import {
@@ -18,14 +18,6 @@ import {
   validateHostname,
   validatePort
 } from './validate'
-
-class ValidatedMap extends ImmutableMap {
-  set(key, value) {
-    validateKeyValue(key)
-    validateKeyValue(value)
-    return super.set(key, value)
-  }
-}
 
 export class ValidatedResponseHead extends ResponseHead {
   setHeader(name, value) {
@@ -54,10 +46,6 @@ export class ValidatedResponseHead extends ResponseHead {
 }
 
 export class ValidatedRequestHead extends RequestHead {
-  constructor(rawHeaders=new ValidatedMap()) {
-    super(rawHeaders)
-  }
-
   setHeader(name, value) {
     validateHeaderName(name)
     validateHeaderValue(value)
@@ -104,13 +92,15 @@ export class ValidatedRequestHead extends RequestHead {
     return super.setSearch(search)
   }
 
-  [$createQueryMap](...args) {
-    return new ValidatedMap(...args)
-  }
-
   setQuery(query) {
     validateQuery(query)
     return super.setQuery(query)
+  }
+
+  setQueryKey(key, value) {
+    validateKeyValue(key)
+    validateKeyValue(value)
+    return super.setQueryKey(key, value)
   }
 
   setHostname(hostname) {

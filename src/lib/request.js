@@ -15,8 +15,6 @@ const $cachedSearch = Symbol('@cachedSearch')
 const $cachedHostname = Symbol('@cachedHostname')
 const $cachedPathname = Symbol('@cachedPathname')
 
-export const $createQueryMap = Symbol('@createQueryMap')
-
 const parsePath = requestHead => {
   const { path } = requestHead
   if(!path)
@@ -93,10 +91,6 @@ export class RequestHead extends HttpHead {
     return this[$setHeader](':args', args)
   }
 
-  getArgsKey(key) {
-    return this.args.get(key)
-  }
-
   setArgsKey(key, value) {
     return this.setArgs(this.args.set(key, value))
   }
@@ -114,16 +108,12 @@ export class RequestHead extends HttpHead {
     return parsePath(this).search
   }
 
-  [$createQueryMap](...args) {
-    return new ImmutableMap(...args)
-  }
-
   get query() {
     if(this[$cachedQuery]) return this[$cachedQuery]
 
     const { search } = this
     const parsed = parseQueryString(search.slice(1))
-    const query = this[$createQueryMap](parsed)
+    const query = new ImmutableMap(parsed)
 
     this[$cachedQuery] = query
     return query
@@ -153,6 +143,10 @@ export class RequestHead extends HttpHead {
     const search = '?' + queryString
 
     return this.setSearch(search)
+  }
+
+  setQueryKey(key, value) {
+    return this.setQuery(this.query.set(key, value))
   }
 
   // request.authority derivatives

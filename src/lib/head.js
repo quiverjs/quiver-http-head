@@ -11,12 +11,12 @@ export const $getHeader = Symbol('@getHeader')
 export const $setHeader = Symbol('@setHeader')
 export const $deleteHeader = Symbol('@deleteHeader')
 
-const constructInstance = (source, ...args) => {
+const constructInstance = (source, args) => {
   let { constructor } = source
   if(constructor[$species])
     constructor = constructor[$species]
 
-  return new constructor(...args)
+  return new constructor(args)
 }
 
 export class HttpHead {
