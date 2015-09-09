@@ -20,7 +20,7 @@ const parsePath = requestHead => {
   if (!path)
     throw new Error('request path is not defined')
 
-  const [pathname, queryString=''] = path.split('?')
+  const [ pathname, queryString='' ] = path.split('?')
   const search = '?' + queryString
 
   requestHead[$cachedPathname] = pathname

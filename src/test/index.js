@@ -5,6 +5,29 @@ import {
   ValidatedResponseHead as ResponseHead
 } from '../lib'
 
+test('response head test', assert => {
+  const res1 = new ResponseHead()
+
+  assert.test('set status', assert => {
+    assert.notOk(res1.status)
+
+    const res2 = res1.setStatus(200)
+    assert.equal(res2.status, '200')
+    assert.notEqual(res2.status, 200)
+    assert.notOk(res1.status)
+
+    assert.throws(() => res1.setStatus(12.34),
+      'should not allow floating point status')
+
+    assert.throws(() => res1.setStatus(1000),
+      'should not allow status > 999')
+
+    assert.end()
+  })
+
+  assert.end()
+})
+
 test('request head test', assert => {
   const req1 = new RequestHead()
 
@@ -66,6 +89,18 @@ test('request head test', assert => {
     assert.throws(() => req2.setQueryKey('object-value', {}),
       'should not allow setting non string to query')
 
+    assert.throws(() => req1.setPath('relative'),
+      'should not allow non-absolute')
+
+    assert.throws(() => req1.setPath('//root'),
+      'should not allow path begins with double slash')
+
+    assert.throws(() => req1.setPath('/api%O'),
+      'should not allow malformed encoded path')
+
+    assert.ok(req1.setPath('*'),
+      'should allow wildcard path for OPTIONS request')
+
     assert.end()
   })
 
@@ -93,6 +128,28 @@ test('request head test', assert => {
     assert.equal(req5.authority, 'other.com')
     assert.equal(req4.authority, 'example.org')
     assert.notOk(req5.port)
+
+    assert.throws(() => req1.setAuthority('malformed.com:authority'),
+      'should not allow malformed authority')
+
+    assert.ok(req1.setAuthority('127.0.0.1:80'),
+      'should allow ip address')
+
+    assert.ok(req1.setAuthority('[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]:8080'),
+      'should allow ipv6 address')
+
+    assert.end()
+  })
+
+  assert.test('request args', assert => {
+    const $foo = Symbol('@foo')
+    const bar = { bar: 'baz' }
+
+    assert.notOk(req1.args.get($foo))
+
+    const req2 = req1.setArgsKey($foo, bar)
+    assert.equal(req2.args.get($foo), bar)
+    assert.notOk(req1.args.get($foo))
 
     assert.end()
   })

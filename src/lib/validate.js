@@ -13,7 +13,7 @@ const validStatusRegex = /^\d{3}$/
 const validSchemeRegex = /^[a-z][a-z0-9\+\-\.]*$/
 const validTokenRegex = /^[a-zA-Z0-9\!\#\$\%\&\'\*\+\-\.\^\_\`\|\~]+$/
 
-const regNameRegex = `[a-zA-Z\\-\\.\\_\\~` +
+const regNameRegex = `[a-zA-Z0-9\\-\\.\\_\\~` +
   `\\!\\$\\&\\'\\(\\)\\*\\+\\,\\;\\=]` +
   `|\\%[0-9a-fA-F][0-9a-fA-F]`
 
@@ -21,12 +21,16 @@ const pcharRegex = `${regNameRegex}|[\\:\\@]`
 const qcharRegex = `${pcharRegex}|\\?\\/`
 const pathnameRegex = `\\/((${pcharRegex})+(${pcharRegex}|\\/)*)?`
 
+// Loose rules for ipv6. To be improved in future
+const ipv6Regex = `\\[[0-9a-fA-F\\:]+\\]`
+const hostnameRegex = `((${regNameRegex})+|(${ipv6Regex})+)`
+
 const validPathnameRegex = new RegExp(`^${pathnameRegex}$`)
 const validSearchRegex = new RegExp(`^\\?(${pcharRegex})*$`)
 const validPathRegex = new RegExp(`^${pathnameRegex}\\??(${qcharRegex})*$`)
 
-const validAuthorityRegex = new RegExp(`^${regNameRegex}+(\\:\\d+)?$/`)
-const validHostnameRegex = new RegExp(`^${regNameRegex}+$/`)
+const validAuthorityRegex = new RegExp(`^${hostnameRegex}(\\:\\d{1,5})?$`)
+const validHostnameRegex = new RegExp(`^${hostnameRegex}$`)
 const validPortRegex = /^\d{1,5}$/
 
 const assertRegex = (regex, str, errorMessage) => {
@@ -34,7 +38,7 @@ const assertRegex = (regex, str, errorMessage) => {
     throw new TypeError('argument must be string')
 
   if(!regex.test(str))
-    throw new Error(errorMessage)
+    throw new Error(errorMessage + ': ' + str)
 }
 
 export const validateKeyValue = str => {
