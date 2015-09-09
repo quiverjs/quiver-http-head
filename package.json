@@ -1,0 +1,34 @@
+{
+  "author": {
+    "name": "Soares Chen",
+    "email": "soares.chen@gmail.com",
+    "url": "http://soareschen.com"
+  },
+  "name": "quiver-http-head",
+  "desription": "Immutable HTTP request/response data structure in Quiver",
+  "version": "1.0.0",
+  "homepage": "https://github.com/quiverjs/quiver-http-head",
+  "repository": {
+    "url": "git@github.com:quiverjs/quiver-http-head.git"
+  },
+  "dependencies": {
+    "immutable": "^3.7.5",
+    "babel-runtime": "^5.8.20"
+  },
+  "devDependencies": {
+    "tape": "^4.2.0",
+    "babel": "^5.8.20"
+  },
+  "bugs": {
+    "url": "https://github.com/quiverjs/quiver-http-head/issues"
+  },
+  "license": "ISC",
+  "main": "./index.js",
+  "scripts": {
+    "test": "make test",
+    "prepublish": "make build"
+  },
+  "engines": {
+    "node": "^4.0.0"
+  }
+}
