@@ -2,7 +2,6 @@ import test from 'tape'
 
 import {
   ValidatedRequestHead as RequestHead,
-  ValidatedResponseHead as ResponseHead
 } from '../lib'
 
 test('request head test', assert => {
@@ -105,6 +104,9 @@ test('request head test', assert => {
     assert.equal(req5.authority, 'other.com')
     assert.equal(req4.authority, 'example.org')
     assert.notOk(req5.port)
+
+    assert.throws(() => req1.setAuthority('user:password@example.com'),
+      'should not allow userinfo portion in authority')
 
     assert.throws(() => req1.setAuthority('malformed.com:authority'),
       'should not allow malformed authority')

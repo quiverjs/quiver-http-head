@@ -1,5 +1,3 @@
-import { Map as ImmutableMap } from 'immutable'
-
 import { RequestHead } from './request'
 import { ResponseHead } from './response'
 import { mixinCreateHeadMethod } from './mixin'
