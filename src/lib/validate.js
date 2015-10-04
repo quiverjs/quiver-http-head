@@ -1,4 +1,4 @@
-import { Map as ImmutableMap } from 'immutable'
+import { isImmutableMap } from 'quiver-util/immutable'
 
 // Follow rules at http://httpwg.github.io/specs/rfc7230.html
 
@@ -107,7 +107,7 @@ export const validatePort = port => {
 }
 
 export const validateQuery = query => {
-  if (!ImmutableMap.isMap(query))
+  if (!isImmutableMap(query))
     throw new TypeError('query must be an immutable map')
 
   for (let [key, value] of query.entries()) {

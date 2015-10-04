@@ -1,4 +1,4 @@
-import { Map as ImmutableMap } from 'immutable'
+import { ImmutableMap } from 'quiver-util/immutable'
 
 // Polyfill Symbol.species
 if(!Symbol.species)
