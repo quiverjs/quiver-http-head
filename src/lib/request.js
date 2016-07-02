@@ -99,11 +99,6 @@ export class RequestHead extends HttpHead {
     let args = this[$getHeader](':args') || ImmutableMap()
     args = args.set('requestHead', this)
 
-    const { pathname } = this
-    if(pathname) {
-      args = args.set('path', pathname)
-    }
-
     return args
   }
 
