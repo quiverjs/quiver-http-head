@@ -1,8 +1,6 @@
 import test from 'tape'
 
-import {
-  ValidatedRequestHead as RequestHead,
-} from '../lib'
+import { RequestHead } from '../lib'
 
 test('request head test', assert => {
   const req1 = new RequestHead()

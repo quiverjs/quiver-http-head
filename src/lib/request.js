@@ -1,4 +1,6 @@
-import { ImmutableMap } from 'quiver-util/immutable'
+import {
+  ImmutableMap, isImmutableMap
+} from 'quiver-util/immutable'
 
 import {
   parse as parseQueryString,
@@ -17,8 +19,7 @@ const $cachedPathname = Symbol('@cachedPathname')
 
 const parsePath = requestHead => {
   const { path } = requestHead
-  if (!path)
-    throw new Error('request path is not defined')
+  if (!path) return {}
 
   const [ pathname, queryString='' ] = path.split('?')
   const search = '?' + queryString
@@ -31,13 +32,17 @@ const parsePath = requestHead => {
 
 const parseAuthority = requestHead => {
   const { authority } = requestHead
-  if (!authority)
-    throw new Error('request authority is not define')
+  if (!authority) return {}
 
   const [hostname, port] = authority.split(':')
 
-  requestHead[$cachedHostname] = hostname
-  if (port) requestHead[$cachedPort] = port
+  if(hostname !== '') {
+    requestHead[$cachedHostname] = hostname
+  }
+
+  if (port && port !== '') {
+    requestHead[$cachedPort] = port
+  }
 
   return { hostname, port }
 }
@@ -63,7 +68,7 @@ export class RequestHead extends HttpHead {
   }
 
   get scheme() {
-    return this[$getHeader](':scheme')
+    return this[$getHeader](':scheme', 'http')
   }
 
   get authority() {
@@ -91,12 +96,19 @@ export class RequestHead extends HttpHead {
   }
 
   get args() {
-    const args = this[$getHeader](':args') || new ImmutableMap()
-    return args.set('requestHead', this)
+    let args = this[$getHeader](':args') || ImmutableMap()
+    args = args.set('requestHead', this)
+
+    const { pathname } = this
+    if(pathname) {
+      args = args.set('path', pathname)
+    }
+
+    return args
   }
 
   setArgs(args) {
-    if (!ImmutableMap.isMap(args))
+    if (!isImmutableMap(args))
       throw new TypeError('args must be an immutable map')
 
     return this[$setHeader](':args', args)
@@ -124,7 +136,7 @@ export class RequestHead extends HttpHead {
 
     const { search } = this
     const parsed = parseQueryString(search.slice(1))
-    const query = new ImmutableMap(parsed)
+    const query = ImmutableMap(parsed)
 
     this[$cachedQuery] = query
     return query

@@ -1,4 +1,4 @@
-import { ImmutableMap } from 'quiver-util/immutable'
+import { ImmutableMap, isImmutableMap } from 'quiver-util/immutable'
 
 // Polyfill Symbol.species
 if(!Symbol.species)
@@ -23,14 +23,14 @@ export class HttpHead {
   constructor(opts={}) {
     const { rawHeaders=new ImmutableMap() } = opts
 
-    if(!ImmutableMap.isMap(rawHeaders))
+    if(!isImmutableMap(rawHeaders))
       throw new TypeError('raw header must be an immutable map')
 
     this[$headers] = rawHeaders
   }
 
-  [$getHeader](key) {
-    return this[$headers].get(key)
+  [$getHeader](key, defaultValue) {
+    return this[$headers].get(key, defaultValue)
   }
 
   [$setHeader](key, value) {
@@ -47,8 +47,8 @@ export class HttpHead {
     return this[$setHeader](name, value)
   }
 
-  getHeader(name) {
-    return this[$getHeader](name)
+  getHeader(name, defaultValue) {
+    return this[$getHeader](name, defaultValue)
   }
 
   deleteHeader(name) {
