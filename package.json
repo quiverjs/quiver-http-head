@@ -6,13 +6,13 @@
   },
   "name": "quiver-http-head",
   "desription": "Immutable HTTP request/response data structure in Quiver",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "homepage": "https://github.com/quiverjs/quiver-http-head",
   "repository": {
     "url": "git@github.com:quiverjs/quiver-http-head.git"
   },
   "dependencies": {
-    "quiver-util": "^1.2.3"
+    "quiver-util": "^1.2.5"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",
@@ -29,6 +29,6 @@
     "prepublish": "make build"
   },
   "engines": {
-    "node": "^6.2.2"
+    "node": "^6.3.0"
   }
 }

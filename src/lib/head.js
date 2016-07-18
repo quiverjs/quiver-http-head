@@ -40,7 +40,7 @@ export class HttpHead {
 
   [$deleteHeader](key) {
     const newHeaders = this[$headers].delete(key)
-    return constructInstance(this, newHeaders)
+    return constructInstance(this, { rawHeaders: newHeaders })
   }
 
   setHeader(name, value) {
